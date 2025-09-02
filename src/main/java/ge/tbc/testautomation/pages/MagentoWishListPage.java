@@ -7,13 +7,15 @@ public class MagentoWishListPage {
     private final Locator successMessage;
     private final Locator welcomeMessage;
     private final Locator mainWishlistGrid;
-
+    public final Locator wishlistItem;
+    public final Locator addToCartButton;
     public MagentoWishListPage(Page page) {
         this.page = page;
         this.successMessage = page.locator(".message-success:has-text('has been added')");
         this.welcomeMessage = page.locator("span.logged-in").first();
         this.mainWishlistGrid = page.locator("div.products-grid.wishlist");
-
+        this.wishlistItem = page.locator("li.product-item");
+        this.addToCartButton = page.locator("button.action.tocart.primary");
     }
 
     public void verifyProductInWishList(String productName) {

@@ -24,6 +24,10 @@ public class ProductPage {
     private final Locator miniCartProductName;
     private final Locator miniCartProductPrice;
     private final Locator miniCartViewCartButton;
+
+    public final Locator reviewsTab ;
+    public final Locator reviewItem;
+
     public ProductPage(Page page) {
         this.page = page;
         this.productName = page.locator("h1.page-title");
@@ -39,6 +43,8 @@ public class ProductPage {
         this.miniCartProductName = page.locator("#mini-cart strong.product-item-name a").first();
         this.miniCartProductPrice = page.locator(".minicart-items .price");
         this.miniCartViewCartButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("View and Edit Cart"));
+        this.reviewsTab = page.locator("#tab-label-reviews-title");
+        this.reviewItem = page.locator(".review-item");
     }
 
     public String getProductName() {

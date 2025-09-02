@@ -5,11 +5,13 @@ public class MagentoCheckoutCartPage {
     private final Page page;
     private final Locator deleteItemButton;
     private final Locator emptyCartMessage;
+    public final Locator shippingCost;
 
     public MagentoCheckoutCartPage(Page page) {
         this.page = page;
         this.deleteItemButton = page.locator("a.action.action-delete").first();
         this.emptyCartMessage = page.locator(".cart-empty");
+        this.shippingCost = page.locator("tr:has-text('Shipping & Handling') span.price");
     }
 
     public void deleteFirstItem() {

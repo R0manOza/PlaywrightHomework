@@ -15,7 +15,30 @@ public class MagentoHomePage {
     private final Locator miniCartProductName;
     private final Locator miniCartProductPrice;
     private final Locator miniCartViewCartButton;
+    public final Locator productReviewsSummary ;
+    public final Locator productReviewLink ;
+    public final Locator productReviewCountText ;
+    public final Locator productItem;
 
+    //--------- mobile test ---------------------
+    // Desktop View Locators
+    public final Locator headerPanel; // The whole top bar with Sign In/Create Account
+    public final Locator headerSignInLink;
+    public final Locator headerCreateAccountLink;
+    public final Locator mainNavMenu; // The main navigation bar for desktop
+
+    // Mobile View Locators
+    public final Locator burgerMenuButton;
+    public final Locator mobileMenuPanel;
+    public final Locator signInLinkInMenu;
+    public final Locator mobileMenuNavLinks;
+    public final Locator mobileAccountMenu;
+    public final Locator mobileMenu;
+
+
+    //--------- ---------------------------------------------------------------
+    public final Locator customerMenuDropdown;
+    public final Locator signOutLink;
     public MagentoHomePage(Page page) {
         this.page = page;
         this.searchInput = page.locator("#search");
@@ -24,6 +47,26 @@ public class MagentoHomePage {
         this.miniCartProductName = page.locator("#mini-cart strong.product-item-name a").first();
         this.miniCartProductPrice = page.locator(".minicart-items .price");
         this.miniCartViewCartButton = page.getByText("View and Edit Cart");
+        this.productReviewsSummary = page.locator(".product-reviews-summary");
+        this.productReviewLink = page.locator(".reviews-actions a.action.view");
+        this.productReviewCountText = page.locator(".reviews-actions a.action.view span");
+        this.productItem = page.locator(".product-item");
+        this.customerMenuDropdown = page.locator("li.customer-welcome button.action.switch");// ive tryed 100 different locators that all should work but they all just dont do anything !  why
+        this.signOutLink = page.locator("li.customer-welcome.active a:has-text('Sign Out')");
+        // Desktop
+        this.headerPanel = page.locator(".panel.wrapper");
+        this.headerSignInLink = this.headerPanel.locator("a:has-text('Sign In')");
+        this.headerCreateAccountLink = this.headerPanel.locator("a:has-text('Create an Account')");
+        this.mainNavMenu = page.locator("nav.navigation");
+
+        // Mobile
+        this.burgerMenuButton = page.locator(".nav-toggle");
+        this.mobileMenuPanel = page.locator("#store\\.menu");
+        this.signInLinkInMenu = page.locator("li.authorization-link a")
+                .filter(new Locator.FilterOptions().setHasText("Sign In")).last();
+        this.mobileMenuNavLinks = page.locator("nav.navigation");
+        this.mobileAccountMenu = page.locator("a.nav-sections-item-switch:has-text('Account')");
+        this.mobileMenu = page.locator("a.nav-sections-item-switch:has-text('Menu')");
     }
 
     public void searchForProduct(String productName) {

@@ -3,6 +3,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import ge.tbc.testautomation.pages.MagentoHomePage;
 import ge.tbc.testautomation.pages.ProductPage;
+import org.testng.Assert;
 
 
 import java.util.Collections;
@@ -13,9 +14,11 @@ import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 public class MagentoHomePageSteps {
+    private Locator productWithReviews;
     private final Page page;
     private final MagentoHomePage homePage;
     private final ProductPage productPage;
+    private int expectedReviewCount;
     public MagentoHomePageSteps(Page page) {
         this.page = page;
         this.homePage = new MagentoHomePage(page);
@@ -106,4 +109,99 @@ public class MagentoHomePageSteps {
 
         System.out.println("Verification: Product details in mini-cart are correct.");
     }
+    //-------------Playwright HW 3 functions -------------------
+    public MagentoHomePageSteps findFirstProductWithReviews() {
+        // Filter all product items to find the first one that has a review summary block.
+        this.productWithReviews = homePage.productItem.filter(new Locator.FilterOptions().setHas(homePage.productReviewsSummary)).first();
+        this.productWithReviews.waitFor();
+        return this;
+    }
+    public MagentoHomePageSteps storeReviewCountFromCard() {
+        String reviewCountText = this.productWithReviews.locator(homePage.productReviewLink).textContent().trim();
+        String numberOnly = reviewCountText.replaceAll("[^0-9]", "");
+        this.expectedReviewCount = Integer.parseInt(numberOnly);
+        System.out.println("Found review count on card: " + this.expectedReviewCount);
+        return this;
+    }
+    public MagentoHomePageSteps clickReviewLink() {
+        this.productWithReviews.locator(homePage.productReviewLink).click();
+        return this;
+    }
+    public int getExpectedReviewCount() {
+        return this.expectedReviewCount;
+    }
+    //functions added for mobile test homework------------------------------------
+    public MagentoHomePageSteps validateDesktopLayoutIsVisible() {
+
+        Assert.assertTrue(homePage.headerSignInLink.isVisible(), "Sign In link should be visible in the header on desktop.");
+        Assert.assertTrue(homePage.headerCreateAccountLink.isVisible(), "Create Account link should be visible in the header on desktop.");
+
+
+        Assert.assertTrue(homePage.mainNavMenu.isVisible(), "Main navigation menu bar should be visible on desktop.");
+
+
+        Assert.assertFalse(homePage.burgerMenuButton.isVisible(), "Burger menu button should NOT be visible on desktop.");
+        System.out.println("Validated desktop layout is visible.");
+        return this;
+    }
+    public MagentoHomePageSteps resizeViewportToMobile() {
+        page.setViewportSize(390, 844); // Common iPhone 12/13/14 size
+        System.out.println("Resized viewport to mobile dimensions.");
+        return this;
+    }
+    public MagentoHomePageSteps clickMobileAccount() {
+        homePage.mobileAccountMenu.click();
+        System.out.println("Clicked the Account link in mobile menu.");
+        return this;
+    }
+    public MagentoHomePageSteps clickMobileMenu() {
+        homePage.mobileMenu.click();
+        System.out.println("Clicked the Menu link in mobile menu.");
+        return this;
+    }
+
+    public MagentoHomePageSteps validateMobileLayoutIsVisible() {
+
+        homePage.burgerMenuButton.waitFor();
+
+
+        Assert.assertTrue(homePage.burgerMenuButton.isVisible(), "Burger menu button should be visible on mobile.");
+
+
+        Assert.assertFalse(homePage.headerSignInLink.isVisible(), "Sign In link should NOT be visible in the header on mobile.");
+        Assert.assertFalse(homePage.headerCreateAccountLink.isVisible(), "Create Account link should NOT be visible in the header on mobile.");
+        System.out.println("Validated mobile layout is visible.");
+        return this;
+    }
+    public MagentoHomePageSteps openBurgerMenu() {
+        homePage.burgerMenuButton.click();
+        homePage.mobileMenuPanel.waitFor();
+        System.out.println("Clicked the burger menu.");
+        return this;
+    }
+    public MagentoHomePageSteps validateAccountLinksMovedToBurgerMenu() {
+
+
+
+
+        homePage.signInLinkInMenu.waitFor();
+
+        Assert.assertTrue(homePage.signInLinkInMenu.isVisible(), "Sign In link should be visible in the burger menu.");
+        System.out.println("Validated account links are inside the burger menu.");
+        return this;
+    }
+    public MagentoHomePageSteps validateNavLinksMovedToBurgerMenu() {
+        // Check for a few key links to confirm they are in the right place.
+        Locator whatsNewLink = homePage.mobileMenuNavLinks.locator("a:has-text(\"WHAT'S NEW\")");
+        Locator womenLink = homePage.mobileMenuNavLinks.locator("a:has-text('WOMEN')").first();
+        Locator saleLink = homePage.mobileMenuNavLinks.locator("a:has-text('SALE')");
+
+        Assert.assertTrue(whatsNewLink.isVisible(), "'What's New' link should be visible in the burger menu.");
+        Assert.assertTrue(womenLink.isVisible(), "'Women' link should be visible in the burger menu.");
+        Assert.assertTrue(saleLink.isVisible(), "'Sale' link should be visible in the burger menu.");
+        System.out.println("Validated main navigation links are inside the burger menu.");
+        return this;
+    }
+
+
 }

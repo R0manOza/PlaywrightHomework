@@ -1,8 +1,6 @@
 package ge.tbc.testautomation.steps;
 import com.microsoft.playwright.Page;
-import ge.tbc.testautomation.pages.MagentoCreateAccountPage;
-import ge.tbc.testautomation.pages.MagentoWishListPage;
-import ge.tbc.testautomation.pages.ProductPage;
+import ge.tbc.testautomation.pages.*;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.regex.Pattern;
@@ -13,12 +11,15 @@ public class MagentoLoginAndRegistrationSteps {
     private final ProductPage productPage;
     private final MagentoCreateAccountPage createAccountPage;
     private final MagentoWishListPage wishListPage;
-
+    private final MagentoLoginPage loginPage;
+    private final MagentoHomePage homePage;
     public MagentoLoginAndRegistrationSteps(Page page) {
         this.page = page;
         this.productPage = new ProductPage(page);
         this.createAccountPage = new MagentoCreateAccountPage(page);
         this.wishListPage = new MagentoWishListPage(page);
+        this.loginPage = new MagentoLoginPage(page);
+        this.homePage = new MagentoHomePage(page);
     }
 
     public String tryToAddItemToWishlistUnauthorized() {
@@ -59,6 +60,33 @@ public class MagentoLoginAndRegistrationSteps {
 
         wishListPage.verifyProductInWishList(productName);
         System.out.println("Verification: Product was successfully added to wishlist after registration.");
+    }
+    public MagentoLoginAndRegistrationSteps login(String email, String password) {
+        page.navigate("https://magento.softwaretestingboard.com/customer/account/login/");
+        loginPage.emailInput.fill(email);
+        loginPage.passwordInput.fill(password);
+        loginPage.signInButton.click();
+        System.out.println("Step: Logged in with user: " + email);
+        return this;
+    }
+
+    public MagentoLoginAndRegistrationSteps registerNewUser(String firstName, String lastName, String email, String password) {
+        page.navigate("https://magento.softwaretestingboard.com/customer/account/create/");
+        createAccountPage.registerUser(firstName, lastName, email, password);
+        System.out.println("Step: Created a new account for user: " + email);
+
+
+        assertThat(wishListPage.getWelcomeMessage()).containsText("Welcome, " + firstName + " " + lastName + "!");
+        System.out.println("Verification: Welcome message is correct, user is logged in.");
+
+        return this;
+    }
+    public MagentoLoginAndRegistrationSteps logout() {
+        homePage.customerMenuDropdown.waitFor();//i have to click this manually because none of the 100 locators worked for me. WHY???
+        homePage.customerMenuDropdown.click();
+        homePage.signOutLink.click();
+        System.out.println("Step: User logged out.");
+        return this;
     }
     }
 
