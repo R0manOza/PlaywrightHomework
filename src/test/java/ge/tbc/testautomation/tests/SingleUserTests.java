@@ -2,6 +2,7 @@ package ge.tbc.testautomation.tests;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.*;
 import java.util.regex.Pattern;
@@ -10,7 +11,8 @@ import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
-
+@Epic("E-Commerce Demo Site")
+@Feature("User Account Interactions")
 public class SingleUserTests {
 
     // Shared objects for all tests in this class
@@ -23,7 +25,7 @@ public class SingleUserTests {
     private static final String password = "Coolpaswordthatis123!!";
     private String favoriteProductName;
 
-    // --- NEW HELPER METHOD ---
+
     private void login(Page pageToLogIn, String userEmail, String userPassword) {
 
         pageToLogIn.locator("input[data-test='email']").fill(userEmail);
@@ -104,7 +106,10 @@ public class SingleUserTests {
         playwright.close();
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, description = "Verify a user can add a product to favorites.")
+    @Story("User can manage their favorites list")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test ensures that a logged-in user can navigate to a product, add it to their favorites, and then verify its presence on the favorites page.")
     public void favouritesTest() {
         // 1. Select the first product card from the homepage.
         Locator productToFavorite = page.locator("a.card").first();
@@ -138,7 +143,10 @@ public class SingleUserTests {
 
 
 
-    @Test(priority = 2)
+    @Test(priority = 2, description = "Verify product filtering by category.")
+    @Story("User can filter products to refine search")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test validates the product filtering functionality by applying single and multiple filters and asserting that the displayed product count is correct.")
     public void filterTest() {
         System.out.println("Starting filterTest...");
         assertThat(page.locator("a.card")).hasCount(9);
@@ -151,45 +159,46 @@ public class SingleUserTests {
         // --- STEP 1: Measure Hand Tools count ---
         handToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait until the number of cards is DIFFERENT from the initial count.
-        // Playwright will wait up to its timeout for this condition to be true.
+
         assertThat(page.locator("a.card")).not().hasCount(initialCount);
 
         int handToolsCount = page.locator("a.card").count();
         System.out.println("Found " + handToolsCount + " products for Hand Tools.");
 
-        // **CRUCIAL FIX:** Uncheck to reset the state.
+
         handToolsCheckbox.uncheck();
 
-        // **EXPLICIT WAIT:** Wait for the number of cards to go BACK to the initial count.
+
         assertThat(page.locator("a.card")).hasCount(initialCount);
         System.out.println("Filters reset. Product count is back to " + initialCount);
 
-        // --- STEP 2: Measure Power Tools count ---
+
         powerToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait for the card count to change again.
+
         assertThat(page.locator("a.card")).not().hasCount(initialCount);
         int powerToolsCount = page.locator("a.card").count();
         System.out.println("Found " + powerToolsCount + " products for Power Tools.");
 
-        // --- STEP 3: Measure the combined count ---
-        // Power Tools is already checked, now we add Hand Tools.
+
         handToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait for the count to change from the Power Tools count.
+
         assertThat(page.locator("a.card")).not().hasCount(powerToolsCount);
         int totalCount = page.locator("a.card").count();
         System.out.println("Found a total of " + totalCount + " products for both categories.");
 
-        // --- STEP 4: Assert the sum ---
+
         System.out.println("Asserting: " + totalCount + " should equal " + handToolsCount + " + " + powerToolsCount);
         assertEquals(totalCount, handToolsCount + powerToolsCount, "Combined filter count is incorrect.");
 
         System.out.println("Verified combined filter count is correct.");
     }
 
-    @Test(priority = 3, dependsOnMethods = "favouritesTest")
+    @Test(priority = 3, dependsOnMethods = "favouritesTest", description = "Verify a user can remove a product from favorites.")
+    @Story("User can manage their favorites list")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test depends on a product being in the favorites list. It navigates to the favorites page and verifies that the user can successfully remove the item.")
     public void removeFavouriteTest() {
         // This test now depends on the STATE left by the previous test,
         // which is why we made favoriteProductName static.
@@ -202,7 +211,10 @@ public class SingleUserTests {
 
     }
 
-    @Test(priority = 4)
+    @Test(priority = 4, description = "Verify product tags are displayed correctly.")
+    @Story("User can see correct product details")
+    @Severity(SeverityLevel.MINOR)
+    @Description("This test ensures data integrity by navigating to a specific product page and verifying that its name and associated tags are displayed correctly.")
     public void tagsTest() {
         // 1. Click the main "Categories" dropdown menu to open it.
         // We use the data-test attribute for reliability.
