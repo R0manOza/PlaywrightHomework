@@ -1,6 +1,6 @@
 /**
- * All steps related to the checkout and payment flow.
- * CONFLICTING CHANGE
+ * This class handles all actions within the multi-step checkout process.
+ * BASE CHANGE
  */
 package ge.tbc.testautomation.steps;
 

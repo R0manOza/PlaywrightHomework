@@ -1,6 +1,6 @@
 /**
- * Steps for cart management and verification.
- * CONFLICTING CHANGE
+ * This class contains steps for interacting with the shopping cart.
+ * BASE CHANGE
  */
 package ge.tbc.testautomation.steps;
 import com.microsoft.playwright.Page;
