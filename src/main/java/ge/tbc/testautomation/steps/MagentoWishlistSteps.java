@@ -1,3 +1,7 @@
+/**
+ * Steps for interacting with the Magento wishlist page.
+ * CONFLICTING CHANGE
+ */
 package ge.tbc.testautomation.steps;
 
 import com.microsoft.playwright.Page;

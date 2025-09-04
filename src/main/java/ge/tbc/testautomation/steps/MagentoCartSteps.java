@@ -1,3 +1,7 @@
+/**
+ * Steps for cart management and verification.
+ * CONFLICTING CHANGE
+ */
 package ge.tbc.testautomation.steps;
 import com.microsoft.playwright.Page;
 import ge.tbc.testautomation.pages.MagentoCheckoutCartPage;

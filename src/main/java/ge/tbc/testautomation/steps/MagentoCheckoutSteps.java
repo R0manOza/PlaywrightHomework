@@ -1,3 +1,7 @@
+/**
+ * All steps related to the checkout and payment flow.
+ * CONFLICTING CHANGE
+ */
 package ge.tbc.testautomation.steps;
 
 import com.microsoft.playwright.Page;
