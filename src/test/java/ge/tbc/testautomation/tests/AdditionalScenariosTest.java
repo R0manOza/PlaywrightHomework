@@ -3,9 +3,13 @@ package ge.tbc.testautomation.tests;
 
 import ge.tbc.testautomation.steps.MagentoCartSteps;
 import ge.tbc.testautomation.steps.MagentoHomePageSteps;
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+
+@Epic("E-Commerce Functionality")
+@Feature("Shopping Cart Management")
 public class AdditionalScenariosTest extends BaseTest {
 
     private MagentoHomePageSteps homePageSteps;
@@ -17,10 +21,11 @@ public class AdditionalScenariosTest extends BaseTest {
         cartSteps = new MagentoCartSteps(page);
     }
 
-    /**
-     * Automates Zephyr Scenario 1: Search, Add, and Verify Item in Cart
-     */
     @Test(description = "E2E - Search for a product and verify successful addition to mini-cart.")
+    @Story("A user should be able to find a product via search and confirm it was added to the cart.")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test validates the core functionality of searching for a product, adding it to the cart, and verifying its presence in the mini-cart, which is a critical part of the user journey.")
+    // i noticed my big mistake and forgot to add the scenario Number here
     public void searchAndVerifyItemInCartTest() {
 
         String[] productDetails = homePageSteps.searchAndAddToCart("shirt");
@@ -31,10 +36,10 @@ public class AdditionalScenariosTest extends BaseTest {
         homePageSteps.verifyItemInMiniCart(addedProductName, addedProductPrice);
     }
 
-    /**
-     * Automates Zephyr Scenario 2: Add and Then Remove Item from Cart
-     */
     @Test(description = "E2E - Add an item to the cart and subsequently remove it.")
+    @Story("A user should be able to remove an item from their shopping cart.")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test validates the complete lifecycle of a cart item: adding it and then successfully removing it from the main cart page, ensuring the cart becomes empty.")
     public void addAndRemoveItemFromCartTest() {
         // Step 1-2: Add an item to the cart. We don't need its details for this test.
         homePageSteps.searchAndAddToCart("shirt");

@@ -4,6 +4,7 @@ import ge.tbc.testautomation.pages.MagentoCheckoutCartPage;
 import ge.tbc.testautomation.pages.MagentoHomePage;
 import ge.tbc.testautomation.pages.ProductPage;
 import ge.tbc.testautomation.steps.MagentoProductPageSteps;
+import io.qameta.allure.Step;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 public class MagentoCartSteps {
@@ -16,7 +17,7 @@ public class MagentoCartSteps {
         this.checkoutCartPage = new MagentoCheckoutCartPage(page);
         this.ProductPage = new ProductPage(page);
     }
-
+    @Step("Navigate to the main cart page and delete the first item")
     public void navigateToCartAndDeleteFirstItem() {
         homePage.goToCheckoutCart();
         System.out.println("Step: Navigated to the main shopping cart page.");
@@ -24,10 +25,10 @@ public class MagentoCartSteps {
         checkoutCartPage.deleteFirstItem();
         System.out.println("Step: Clicked the delete button for the first item.");
     }
-
+    @Step("Verify that the shopping cart is empty")
     public void verifyCartIsEmpty() {
         assertThat(checkoutCartPage.getEmptyCartMessage()).isVisible();
         assertThat(checkoutCartPage.getEmptyCartMessage()).containsText("You have no items in your shopping cart.");
-        System.out.println("Verification: Cart is now empty.");
+       // System.out.println("Verification: Cart is now empty."); removed due to allur report . im pretty sure now it makes this redundant .
     }
 }

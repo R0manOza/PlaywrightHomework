@@ -4,10 +4,12 @@ import ge.tbc.testautomation.pages.ProductPage;
 import ge.tbc.testautomation.steps.MagentoCheckoutSteps;
 import ge.tbc.testautomation.steps.MagentoLoginAndRegistrationSteps;
 import ge.tbc.testautomation.steps.MagentoWishlistSteps;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
+@Epic("E-Commerce Functionality")
+@Feature("Purchase Flow")
 public class magentoPurchaseTest extends BaseTest {
 
     private MagentoLoginAndRegistrationSteps loginSteps;
@@ -23,8 +25,10 @@ public class magentoPurchaseTest extends BaseTest {
         productPage = new ProductPage(page);
     }
 
-    @Test(description = "Performs a full end-to-end purchase flow for an item from the wishlist.")
-    public void purchaseItem() {
+    @Test(description = "E2E - Full purchase cycle for a new user starting from the wishlist.")
+    @Story("A new user should be able to register, add an item to their wishlist, log out, log back in, and purchase that item.")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("This is a critical path test that validates user registration, wishlist persistence after logout/login, the entire multi-step checkout process including address validation and payment steps, and final order confirmation.")    public void purchaseItem() {
         // --- Test Data ---
         String firstName = "Test" + RandomStringUtils.randomNumeric(3);
         String lastName = "User" + RandomStringUtils.randomNumeric(3);

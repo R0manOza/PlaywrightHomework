@@ -3,6 +3,7 @@ package ge.tbc.testautomation.tests;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.*;
 
@@ -11,7 +12,8 @@ import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
-
+@Epic("E-Commerce Demo Site")
+@Feature("User Account Interactions")
 public class IsolatedUserTests {
     private static Playwright playwright;
     private static Browser browser;
@@ -73,7 +75,9 @@ public class IsolatedUserTests {
         browser.close();
         playwright.close();
     }
-    @Test
+    @Test(description = "Verify that a user can add a product to their favorites.")
+    @Story("A logged-in user should be able to add an item to their favorites list and see it there.")
+    @Severity(SeverityLevel.CRITICAL)
     public void favouritesTest() {
         Locator productToFavorite = page.locator("a.card").first();
         String favoriteProductName = productToFavorite.locator("[data-test='product-name']").textContent().trim();
@@ -88,7 +92,9 @@ public class IsolatedUserTests {
 
         assertThat(page.locator("[data-test='product-name']:has-text('" + favoriteProductName + "')")).isVisible();
     }
-    @Test
+    @Test(description = "Verify product filtering by category.")
+    @Story("A user should be able to filter products by one or more categories and see the correct results.")
+    @Severity(SeverityLevel.NORMAL)
     public void filterTest() {
         System.out.println("Starting filterTest...");
         assertThat(page.locator("a.card")).hasCount(9);
@@ -98,48 +104,47 @@ public class IsolatedUserTests {
         Locator handToolsCheckbox = page.locator("label:has-text('Screwdriver') input[type='checkbox']");
         Locator powerToolsCheckbox = page.locator("label:has-text('Sander') input[type='checkbox']");
 
-        // --- STEP 1: Measure Hand Tools count ---
+
         handToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait until the number of cards is DIFFERENT from the initial count.
-        // Playwright will wait up to its timeout for this condition to be true.
         assertThat(page.locator("a.card")).not().hasCount(initialCount);
 
         int handToolsCount = page.locator("a.card").count();
         System.out.println("Found " + handToolsCount + " products for Hand Tools.");
 
-        // **CRUCIAL FIX:** Uncheck to reset the state.
+
         handToolsCheckbox.uncheck();
 
-        // **EXPLICIT WAIT:** Wait for the number of cards to go BACK to the initial count.
+
         assertThat(page.locator("a.card")).hasCount(initialCount);
         System.out.println("Filters reset. Product count is back to " + initialCount);
 
-        // --- STEP 2: Measure Power Tools count ---
+
         powerToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait for the card count to change again.
+
         assertThat(page.locator("a.card")).not().hasCount(initialCount);
         int powerToolsCount = page.locator("a.card").count();
         System.out.println("Found " + powerToolsCount + " products for Power Tools.");
 
-        // --- STEP 3: Measure the combined count ---
-        // Power Tools is already checked, now we add Hand Tools.
+
         handToolsCheckbox.check();
 
-        // **EXPLICIT WAIT:** Wait for the count to change from the Power Tools count.
+        //
         assertThat(page.locator("a.card")).not().hasCount(powerToolsCount);
         int totalCount = page.locator("a.card").count();
         System.out.println("Found a total of " + totalCount + " products for both categories.");
 
-        // --- STEP 4: Assert the sum ---
+
         System.out.println("Asserting: " + totalCount + " should equal " + handToolsCount + " + " + powerToolsCount);
         assertEquals(totalCount, handToolsCount + powerToolsCount, "Combined filter count is incorrect.");
 
         System.out.println("Verified combined filter count is correct.");
     }
 
-    @Test
+    @Test(description = "Verify that a user can remove a product from their favorites.")
+    @Story("A logged-in user should be able to remove an item from their favorites list.")
+    @Severity(SeverityLevel.NORMAL)
     public void removeFavouriteTest() {
         // First add a favourite
         Locator productToFavorite = page.locator("a.card").first();
@@ -157,7 +162,9 @@ public class IsolatedUserTests {
         page.locator("button[data-test='delete']").click();
         assertThat(page.locator(".card-title:has-text('" + favoriteProductName + "')")).not().isVisible();
     }
-    @Test
+    @Test(description = "Verify product tags are displayed correctly on the product page.")
+    @Story("Navigating to a product page should display the correct product details and associated tags.")
+    @Severity(SeverityLevel.MINOR)
     public void tagsTest() {
         page.locator("a[data-test='nav-categories']").click();
         page.locator("a[data-test='nav-hand-tools']").click();
