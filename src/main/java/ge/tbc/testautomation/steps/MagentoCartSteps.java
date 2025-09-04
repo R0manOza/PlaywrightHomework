@@ -1,3 +1,7 @@
+/**
+ * This class contains steps for interacting with the shopping cart.
+ * BASE CHANGE
+ */
 package ge.tbc.testautomation.steps;
 import com.microsoft.playwright.Page;
 import ge.tbc.testautomation.pages.MagentoCheckoutCartPage;

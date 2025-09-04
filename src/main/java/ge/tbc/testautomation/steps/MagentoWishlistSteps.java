@@ -1,3 +1,7 @@
+/**
+ * This class contains all steps related to the user's wishlist functionality.
+ * BASE CHANGE
+ */
 package ge.tbc.testautomation.steps;
 
 import com.microsoft.playwright.Page;
