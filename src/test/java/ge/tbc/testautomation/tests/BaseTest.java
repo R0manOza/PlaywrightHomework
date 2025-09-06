@@ -18,7 +18,7 @@ public class BaseTest {
         // Context and page are created once
         context = browser.newContext();
         page = context.newPage();
-        page.navigate("https://magento.softwaretestingboard.com/");
+        //page.navigate("https://magento.softwaretestingboard.com/");
     }
 
     @AfterClass
