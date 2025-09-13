@@ -1,3 +1,7 @@
+/**
+ * This class handles all actions within the multi-step checkout process.
+ * BASE CHANGE
+ */
 package ge.tbc.testautomation.steps;
 
 import com.microsoft.playwright.Page;
